@@ -19,7 +19,6 @@ const navItems = [
   "Solutions",
   "Portfolio",
   "Case Studies",
-  "Careers",
   "Reach Us",
 ];
 
@@ -29,7 +28,6 @@ const routes = {
   Solutions: "/solutions",
   Portfolio: "/portfolio",
   "Case Studies": "/case-studies",
-  Careers: "/careers",
   "Reach Us": "/contact",
 };
 

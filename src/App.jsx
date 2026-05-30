@@ -4,10 +4,9 @@ import {
   Route,
   Outlet,
   useLocation,
-  Navigate
 } from "react-router-dom";
-import { useEffect, useState } from "react";
-import './App.css';
+import { useEffect, useState, useCallback } from "react";
+import "./App.css";
 import Header from "./Components/Header/Header";
 import Home from "./Pages/Home/Home";
 import AboutUs from "./Pages/About/About";
@@ -20,34 +19,31 @@ import Legal from "./Pages/Legal/Legal";
 import Speak from "./Pages/Speak/Speak";
 import Consultation from "./Pages/Consultation/Consultation";
 import CookieConsent from "./Components/Cookies/Cookies";
-import { Box } from "@mui/material";
 import It from "./Pages/It/It";
 import DataServices from "./Pages/DataServices/DataServices";
 import AIML from "./Pages/AIML/AIML";
 import Infrastructure from "./Pages/Infrastructure/Infrastructure";
 import Cybersecurity from "./Pages/Cybersecurity/Cybersecurity";
-import { AuthProvider } from './layouts/AuthProvider';
-import { ProtectedRoute } from './layouts/ProtectedRoute';
-import AdminLayout from './layouts/AdminLayout';
-
-import CareersPage from './Pages/careers/CareersPage';
-import AdminLogin from './Pages/admin/AdminLogin';
-import AuthCallback from './Pages/admin/AuthCallback';
-import AdminDashboard from './Pages/admin/AdminDashboard';
-import AdminJobs from './Pages/admin/AdminJobs';
-import AdminApplications from './Pages/admin/AdminApplications';
-
-
+import { AuthProvider } from "./layouts/AuthProvider";
+import { Box } from "@mui/material";
+import Loader from "./Components/animations/Loader";
+import FloatingLogo from "./Components/animations/FloatingLogo";
+// ─────────────────────────────────────────────────────────────────────────────
 
 function Layout() {
   const { pathname } = useLocation();
+  const isHome = pathname === "/";
+
   const [cookieAccepted, setCookieAccepted] = useState(false);
+
+  const [loaderDone, setLoaderDone] = useState(!isHome);
+  const handleLoaderComplete = useCallback(() => setLoaderDone(true), []);
+
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const cookieStatus = localStorage.getItem("iitilCookieConsent");
-    if (cookieStatus) {
-      setCookieAccepted(true);
-    }
+    if (cookieStatus) setCookieAccepted(true);
   }, []);
 
   useEffect(() => {
@@ -56,9 +52,20 @@ function Layout() {
 
   return (
     <>
-      <Header />
+      {isHome && !loaderDone && (
+        <Loader onComplete={handleLoaderComplete} />
+      )}
 
-      {/* ✅ BLUR WRAPPER */}
+    
+      <FloatingLogo
+        loaderDone={loaderDone}
+        isHome={isHome}
+        onScrollProgress={setScrollProgress}
+      />
+
+     
+      <Header scrollProgress={scrollProgress} />
+
       <Box
         sx={{
           filter: cookieAccepted ? "none" : "blur(6px)",
@@ -71,7 +78,6 @@ function Layout() {
         <Footer />
       </Box>
 
-      {/* COOKIE BANNER (always on top) */}
       <CookieConsent onAccept={() => setCookieAccepted(true)} />
     </>
   );
@@ -97,39 +103,6 @@ function AppRouter() {
             <Route path="/ai-ml" element={<AIML />} />
             <Route path="/cloud-infrastructure" element={<Infrastructure />} />
             <Route path="/cybersecurity" element={<Cybersecurity />} />
-            <Route path="/careers" element={<CareersPage />} />
-
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/auth/callback" element={<AuthCallback />} />
-
-            <Route element={<ProtectedRoute />}>
-              <Route element={<AdminLayout />}>
-                <Route
-                  path="/admin/dashboard"
-                  element={<AdminDashboard />}
-                />
-
-                <Route
-                  path="/admin/jobs"
-                  element={<AdminJobs />}
-                />
-
-                <Route
-                  path="/admin/applications"
-                  element={<AdminApplications />}
-                />
-
-                <Route
-                  path="/admin"
-                  element={
-                    <Navigate
-                      to="/admin/dashboard"
-                      replace
-                    />
-                  }
-                />
-              </Route>
-            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

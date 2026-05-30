@@ -22,47 +22,7 @@ export default function HeroSection() {
         position: "relative",
       }}
     >
-      {/* ✅ ICON */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: { xs: "40px" },
-          right: { xs: "10px", md: "70px" },
-          width: { xs: "60px", md: "70px" },
-          zIndex: 1,
-          pointerEvents: "none",
-          display: { xs: "none", lg: "flex" },
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Box
-          component="img"
-          src="/Images/Icon.svg"
-          alt="icon"
-          sx={{
-            width: "40%",
-            height: "auto",
-          }}
-        />
-
-        <Typography
-          sx={{
-            mt: "5px",
-            fontFamily: "Gilroy-Medium, sans-serif",
-            fontWeight: 400,
-            fontSize: "9.94px",
-            color: "#8D94B8",
-          }}
-        >
-          A{" "}
-          <Box component="span" sx={{ fontWeight: 900 }}>
-            YAKA
-          </Box>{" "}
-          Brand
-        </Typography>
-      </Box>
-
+      
       {/* ✅ FIXED CONTAINER (MATCHES FIRST HERO) */}
       <Box
         sx={{
